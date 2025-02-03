@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./App.css";
-import { getCatFact, getCatImage } from "./assets/services/data";
+import { getCatFact, getCatImage } from "./assets/services/cat";
 
 function App() {
   const [catFact, setCatFact] = useState("");
@@ -9,14 +9,23 @@ function App() {
 
   async function handleClick() {
     const catInfo = await getCatFact();
-    const firstWord = catInfo.fact.split(" ", 1);
+    const firstWord = catInfo.split(" ", 3).join(" ");
 
-    const catImage = await getCatImage(firstWord);
-    const catImageURL = URL.createObjectURL(catImage);
+    const catImageURL = await getCatImage(firstWord);
 
-    setCatFact(catInfo.fact);
+    setCatFact(catInfo);
     setImageURL(catImageURL);
   }
+
+  useEffect(() => {
+    getCatFact().then((newFact) => setCatFact(newFact));
+  }, []);
+
+  useEffect(() => {
+    if (!catFact) return;
+    const firstWord = catFact.split(" ", 3).join(" ");
+    getCatImage(firstWord).then((url) => setImageURL(url));
+  }, [catFact]);
 
   return (
     <>
