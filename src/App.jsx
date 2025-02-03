@@ -9,12 +9,7 @@ function App() {
 
   async function handleClick() {
     const catInfo = await getCatFact();
-    const firstWord = catInfo.split(" ", 3).join(" ");
-
-    const catImageURL = await getCatImage(firstWord);
-
     setCatFact(catInfo);
-    setImageURL(catImageURL);
   }
 
   useEffect(() => {
@@ -30,12 +25,8 @@ function App() {
   return (
     <>
       <h1>Prueba tecnica trainee</h1>
-      {catFact && (
-        <div className="content">
-          {imageURL && <img src={imageURL} alt={`a cat image saying a word`} />}
-          <p>{catFact}</p>
-        </div>
-      )}
+      {catFact && <p>{catFact}</p>}
+      {imageURL && <img src={imageURL} alt={`a cat image saying a word`} />}
       <button onClick={handleClick}>Recover cat fact</button>
     </>
   );
