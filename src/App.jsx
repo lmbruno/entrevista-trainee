@@ -1,32 +1,25 @@
-import { useEffect, useState } from "react";
-
+import { useCatFact } from "./hooks/useCatFact";
+import { useCatImage } from "./hooks/useCatImage";
 import "./App.css";
-import { getCatFact, getCatImage } from "./assets/services/cat";
 
 function App() {
-  const [catFact, setCatFact] = useState("");
-  const [imageURL, setImageURL] = useState("");
+  const { catFact, refreshFact } = useCatFact();
+  const { imageURL } = useCatImage({ catFact });
 
-  async function handleClick() {
-    const catInfo = await getCatFact();
-    setCatFact(catInfo);
+  function handleClick() {
+    refreshFact();
   }
-
-  useEffect(() => {
-    getCatFact().then((newFact) => setCatFact(newFact));
-  }, []);
-
-  useEffect(() => {
-    if (!catFact) return;
-    const firstWord = catFact.split(" ", 3).join(" ");
-    getCatImage(firstWord).then((url) => setImageURL(url));
-  }, [catFact]);
 
   return (
     <>
       <h1>Prueba tecnica trainee</h1>
       {catFact && <p>{catFact}</p>}
-      {imageURL && <img src={imageURL} alt={`a cat image saying a word`} />}
+      {imageURL && (
+        <img
+          src={imageURL}
+          alt={`a cat image saying ${catFact.split(" ", 3).join(" ")}`}
+        />
+      )}
       <button onClick={handleClick}>Recover cat fact</button>
     </>
   );
